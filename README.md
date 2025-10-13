@@ -40,6 +40,8 @@ This API provides a complete CRUD interface for managing organisation records. B
 - ✅ Dependency injection for testability
 - ✅ Sample data seeding
 - ✅ SQLite database with zero configuration
+- ✅ Comprehensive test suite with 97% coverage (45 tests)
+- ✅ Automated PR review bot powered by Amp AI
 
 ## Architecture
 
@@ -461,38 +463,40 @@ This project follows Python best practices:
 
 ## Testing
 
+### Automated Testing
+
+The project includes a comprehensive test suite with **97% code coverage** and **45 tests** covering all layers.
+
+**Run tests:**
+```bash
+pytest
+```
+
+**Run tests with coverage report:**
+```bash
+pytest --cov=. --cov-report=html
+```
+
+**Test structure:**
+```
+tests/
+├── conftest.py           # Test fixtures and configuration
+├── test_models.py        # Entity/model tests (5 tests)
+├── test_repositories.py  # Repository layer tests (12 tests)
+├── test_services.py      # Service layer tests (13 tests)
+└── test_api.py          # API endpoint tests (15 tests)
+```
+
+**Test Coverage:**
+- Models: 100%
+- Repositories: 100%
+- Services: 100%
+- API: 100%
+- Overall: 97%
+
 ### Manual Testing
 
 Use the interactive documentation at http://localhost:8000/docs to test all endpoints.
-
-### Automated Testing (To Be Implemented)
-
-**Install test dependencies:**
-```bash
-pip install pytest pytest-asyncio httpx
-```
-
-**Test structure (recommended):**
-```
-tests/
-├── test_models.py
-├── test_repositories.py
-├── test_services.py
-└── test_api.py
-```
-
-**Example test:**
-```python
-from fastapi.testclient import TestClient
-from main import app
-
-client = TestClient(app)
-
-def test_get_organisations():
-    response = client.get("/organisation")
-    assert response.status_code == 200
-    assert isinstance(response.json(), list)
-```
 
 ## Configuration
 

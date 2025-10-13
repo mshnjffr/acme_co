@@ -1,0 +1,16 @@
+{
+  "name": "amp-pr-review-bot",
+  "version": "1.0.0",
+  "description": "Automated PR review bot using Amp AI SDK",
+  "type": "module",
+  "main": "pr-review.js",
+  "scripts": {
+    "review": "node pr-review.js"
+  },
+  "dependencies": {
+    "@sourcegraph/the-orb-is-awake": "^0.1.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

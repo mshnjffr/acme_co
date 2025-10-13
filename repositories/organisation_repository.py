@@ -1,6 +1,6 @@
 import sqlite3
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List, Optional
 from repositories.base import IRepository
 from models.entity import Organisation
@@ -59,7 +59,7 @@ class OrganisationRepository(IRepository[Organisation]):
     def create(self, entity: Organisation) -> Organisation:
         with self._get_connection() as conn:
             cursor = conn.cursor()
-            now = datetime.utcnow()
+            now = datetime.now(timezone.utc)
             
             cursor.execute("""
                 INSERT INTO organisations (created_at, details, name, tags, updated_at, url)
@@ -87,7 +87,7 @@ class OrganisationRepository(IRepository[Organisation]):
         
         with self._get_connection() as conn:
             cursor = conn.cursor()
-            now = datetime.utcnow()
+            now = datetime.now(timezone.utc)
             
             cursor.execute("""
                 UPDATE organisations
