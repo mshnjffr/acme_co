@@ -6,6 +6,32 @@ from services.organisation_service import OrganisationService
 
 app = FastAPI(title="Organisation API", version="2.0.0")
 
+@app.get("/")
+def root():
+    return {
+        "message": "Organisation API",
+        "version": "2.0.0",
+        "endpoints": {
+            "health": "GET /health",
+            "docs": "GET /docs",
+            "organisations": {
+                "list": "GET /organisation",
+                "get": "GET /organisation/{id}",
+                "create": "PUT /organisation",
+                "update": "PUT /organisation/{id}",
+                "delete": "DELETE /organisation/{id}"
+            }
+        }
+    }
+
+@app.get("/health")
+def health_check():
+    return {
+        "status": "healthy",
+        "service": "Organisation API",
+        "version": "2.0.0"
+    }
+
 @app.get("/organisation", response_model=List[OrganisationResponse])
 def get_organisations(
     service: OrganisationService = Depends(get_organisation_service)
