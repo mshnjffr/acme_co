@@ -167,7 +167,7 @@ Or delete the workflow file entirely.
 ## Support
 
 - **Amp Documentation**: [https://ampcode.com/manual](https://ampcode.com/manual)
-- **SDK Documentation**: [https://www.npmjs.com/package/@sourcegraph/the-orb-is-awake](https://www.npmjs.com/package/@sourcegraph/the-orb-is-awake)
+- **SDK Documentation**: [https://www.npmjs.com/package/@sourcegraph/amp-sdk](https://www.npmjs.com/package/@sourcegraph/amp-sdk)
 - **Issues**: Open an issue in this repository
 
 ---

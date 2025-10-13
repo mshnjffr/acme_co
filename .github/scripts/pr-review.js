@@ -1,6 +1,6 @@
-const { execute } = require('@sourcegraph/the-orb-is-awake');
-const { execSync } = require('child_process');
-const https = require('https');
+import { execute } from '@sourcegraph/amp-sdk';
+import { execSync } from 'child_process';
+import https from 'https';
 
 async function postComment(prNumber, comment) {
   const [owner, repo] = process.env.REPO_NAME.split('/');
