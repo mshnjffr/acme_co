@@ -1,6 +1,6 @@
-# Amp AI PR Review Bot - Complete Implementation Guide
+# Amp PR Review Bot - Complete Implementation Guide
 
-This repository uses an automated PR review bot powered by [Amp AI](https://ampcode.com) to provide intelligent code reviews on every pull request. This guide will help you implement the same bot in your own repository.
+This repository uses an automated PR review bot powered by [Amp](https://ampcode.com) to provide intelligent code reviews on every pull request. This guide will help you implement the same bot in your own repository.
 
 ## Table of Contents
 
@@ -43,7 +43,7 @@ Before implementing this bot, you'll need:
 4. **GitHub Actions Enabled**: Should be enabled by default on public repos
 5. **Node.js 18+**: Required for the bot script (handled by GitHub Actions)
 
-**Cost**: Amp AI has a free tier. Check pricing at [ampcode.com/pricing](https://ampcode.com/pricing)
+**Cost**: Amp has a free tier. Check pricing at [ampcode.com/pricing](https://ampcode.com/pricing)
 
 ## Architecture Overview
 
@@ -70,14 +70,14 @@ The PR review bot consists of three main components:
 │               Review Script                                 │
 │         (.github/scripts/pr-review.js)                      │
 │  • Gets PR diff and changed files                           │
-│  • Calls Amp AI with review prompt                          │
+│  • Calls Amp with review prompt                          │
 │  • Receives AI analysis                                     │
 │  • Posts comment to PR                                      │
 └──────────────────────┬──────────────────────────────────────┘
                        │
                        ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                   Amp AI Service                            │
+│                   Amp Service                            │
 │              (@sourcegraph/the-orb-is-awake)                │
 │  • Analyzes code changes                                    │
 │  • Reviews for bugs, security, quality                      │
@@ -89,8 +89,8 @@ The PR review bot consists of three main components:
 
 1. **Developer opens/updates a PR** → GitHub webhook triggers
 2. **GitHub Actions starts** → Checks out code, sets up environment
-3. **Review script executes** → Gets diff, calls Amp AI
-4. **Amp AI analyzes** → Reviews code, generates feedback
+3. **Review script executes** → Gets diff, calls Amp
+4. **Amp analyzes** → Reviews code, generates feedback
 5. **Script posts comment** → Review appears on PR as a comment
 
 ## Quick Setup (5 Minutes)
@@ -229,14 +229,14 @@ jobs:
 {
   "name": "amp-pr-review-bot",
   "version": "1.0.0",
-  "description": "Automated PR review bot using Amp AI SDK",
+  "description": "Automated PR review bot using Amp SDK",
   "type": "module",                    // IMPORTANT: Enables ES modules (import/export)
   "main": "pr-review.js",
   "scripts": {
     "review": "node pr-review.js"
   },
   "dependencies": {
-    "@sourcegraph/the-orb-is-awake": "^0.1.3"  // Amp AI SDK
+    "@sourcegraph/the-orb-is-awake": "^0.1.3"  // Amp SDK
   },
   "engines": {
     "node": ">=18.0.0"                 // Requires Node 18+ (for fetch API)
@@ -257,7 +257,7 @@ The Amp SDK uses modern JavaScript with `import` statements instead of `require(
 
 ```javascript
 // 1. IMPORT DEPENDENCIES
-import { execute } from '@sourcegraph/the-orb-is-awake';  // Amp AI SDK
+import { execute } from '@sourcegraph/the-orb-is-awake';  // Amp SDK
 import { execSync } from 'child_process';                // For git commands
 
 // 2. FUNCTION: Post comment to GitHub PR
@@ -277,8 +277,8 @@ async function getDiffSummary() {
 async function reviewPullRequest() {
   // A. Validate environment variables
   // B. Get PR diff and file list
-  // C. Build review prompt for Amp AI
-  // D. Call Amp AI with execute()
+  // C. Build review prompt for Amp
+  // D. Call Amp with execute()
   // E. Stream response and extract result
   // F. Post review as PR comment
 }
@@ -384,7 +384,7 @@ your-repository/
 │   │   │
 │   │   └── pr-review.js           # 🤖 Main review script
 │   │                              #    1. Gets PR diff via git
-│   │                              #    2. Calls Amp AI with review prompt
+│   │                              #    2. Calls Amp with review prompt
 │   │                              #    3. Posts review to PR as comment
 │   │
 │   └── README.md                  # 📖 This documentation file
@@ -440,11 +440,11 @@ your-repository/
    Builds review prompt with file changes
    ```
 
-5. **Amp AI Analysis**
+5. **Amp Analysis**
    ```
    Script calls execute() with prompt
    ↓
-   Amp AI analyzes:
+   Amp analyzes:
    - Code changes (what was added/removed)
    - File structure (what files were modified)
    - Code patterns (SOLID, DRY, KISS principles)
@@ -689,7 +689,7 @@ Rate compliance: [PASS/FAIL]
 Here's what a typical bot review looks like:
 
 ```markdown
-## 🤖 Amp AI Code Review
+## 🤖 Amp Code Review
 
 ### 1. Overall Assessment ⭐
 
@@ -751,7 +751,7 @@ This PR adds a comprehensive test suite with excellent coverage (97%). Well-stru
 - Well-documented code structure
 
 ---
-*Powered by [Amp AI](https://ampcode.com)*
+*Powered by [Amp](https://ampcode.com)*
 ```
 
 ## Troubleshooting
@@ -925,7 +925,7 @@ const existingComments = await fetch(
 
 const botAlreadyCommented = existingComments.some(
   c => c.user.login === 'github-actions[bot]' && 
-       c.body.includes('Amp AI Code Review')
+       c.body.includes('Amp Code Review')
 );
 
 if (botAlreadyCommented) {
@@ -938,7 +938,7 @@ if (botAlreadyCommented) {
 
 ### Pricing Model
 
-Amp AI charges based on token usage (similar to OpenAI):
+Amp charges based on token usage (similar to OpenAI):
 
 | PR Size | Files | Estimated Tokens | Approx. Cost (USD) |
 |---------|-------|------------------|--------------------|
@@ -959,7 +959,7 @@ Amp AI charges based on token usage (similar to OpenAI):
 
 **Bottlenecks**:
 1. npm install (~15-20 seconds)
-2. Amp AI analysis (~30-60 seconds)
+2. Amp analysis (~30-60 seconds)
 3. GitHub API calls (~2-5 seconds)
 
 ### Optimization Tips
@@ -1188,7 +1188,7 @@ async function sendSlackNotification(prNumber, reviewSummary) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      text: `PR #${prNumber} reviewed by Amp AI`,
+      text: `PR #${prNumber} reviewed by Amp`,
       blocks: [
         {
           type: 'section',
@@ -1249,7 +1249,7 @@ await fetch(`https://api.github.com/repos/${owner}/${repo}/pulls/${prNumber}/rev
   },
   body: JSON.stringify({
     event: 'APPROVE',
-    body: 'Automated approval from Amp AI',
+    body: 'Automated approval from Amp',
   }),
 });
 ```
@@ -1292,7 +1292,7 @@ node pr-review.js
 
 ### Q: What programming languages does it support?
 
-**A**: Amp AI understands virtually all programming languages:
+**A**: Amp understands virtually all programming languages:
 - Python, JavaScript, TypeScript, Go, Rust
 - Java, C#, C++, Swift, Kotlin
 - Ruby, PHP, Scala, Elixir
@@ -1398,6 +1398,6 @@ gh workflow run pr-review.yml
 
 ---
 
-**Built with ❤️ using [Amp AI](https://ampcode.com) 🚀**
+**Built with ❤️ using [Amp](https://ampcode.com) 🚀**
 
 *Last updated: October 2025*
