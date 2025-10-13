@@ -1,4 +1,4 @@
-const { execute } = require('@sourcegraph/amp-sdk');
+const { execute } = require('@sourcegraph/the-orb-is-awake');
 const { execSync } = require('child_process');
 const https = require('https');
 
