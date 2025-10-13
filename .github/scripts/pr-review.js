@@ -1,4 +1,4 @@
-import { execute } from '@sourcegraph/amp-sdk';
+import { execute } from '@sourcegraph/the-orb-is-awake';
 import { execSync } from 'child_process';
 import https from 'https';
 
