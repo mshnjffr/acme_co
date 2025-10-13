@@ -6,8 +6,11 @@ async function postComment(prNumber, comment) {
   const [owner, repo] = process.env.REPO_NAME.split('/');
   const token = process.env.GITHUB_TOKEN;
 
+  // Ensure comment is a plain string
+  const commentBody = String(comment);
+  
   const data = JSON.stringify({
-    body: comment,
+    body: commentBody,
   });
 
   const options = {
@@ -121,6 +124,8 @@ Use git diff to get the full changes if needed.
           reviewResult = `## ❌ Review Failed\n\n${message.error}`;
         } else {
           console.log('✅ Amp Review Completed');
+          console.log('Result type:', typeof message.result);
+          console.log('Result preview:', message.result ? String(message.result).substring(0, 200) : 'empty');
           reviewResult = message.result;
         }
         break;
@@ -128,8 +133,11 @@ Use git diff to get the full changes if needed.
     }
 
     // Post the review as a comment
-    const fullComment = `## 🤖 Amp AI Code Review\n\n${reviewResult}\n\n---\n*Powered by [Amp AI](https://ampcode.com)*`;
+    // Ensure reviewResult is a string and sanitize it
+    const resultText = typeof reviewResult === 'string' ? reviewResult : JSON.stringify(reviewResult);
+    const fullComment = `## 🤖 Amp AI Code Review\n\n${resultText}\n\n---\n*Powered by [Amp AI](https://ampcode.com)*`;
     
+    console.log('Posting comment with length:', fullComment.length);
     await postComment(prNumber, fullComment);
     console.log('✅ Review posted to PR successfully');
 
