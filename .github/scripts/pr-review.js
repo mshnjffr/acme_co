@@ -1,55 +1,31 @@
 import { execute } from '@sourcegraph/the-orb-is-awake';
 import { execSync } from 'child_process';
-import https from 'https';
 
 async function postComment(prNumber, comment) {
   const [owner, repo] = process.env.REPO_NAME.split('/');
   const token = process.env.GITHUB_TOKEN;
 
-  // Ensure comment is a plain string
-  const commentBody = String(comment);
+  const url = `https://api.github.com/repos/${owner}/${repo}/issues/${prNumber}/comments`;
   
-  const data = JSON.stringify({
-    body: commentBody,
-  });
-
-  const options = {
-    hostname: 'api.github.com',
-    port: 443,
-    path: `/repos/${owner}/${repo}/issues/${prNumber}/comments`,
+  const response = await fetch(url, {
     method: 'POST',
     headers: {
+      'Accept': 'application/vnd.github.v3+json',
+      'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json',
-      'Content-Length': data.length,
-      'Authorization': `token ${token}`,
       'User-Agent': 'Amp-PR-Review-Bot',
     },
-  };
-
-  return new Promise((resolve, reject) => {
-    const req = https.request(options, (res) => {
-      let responseData = '';
-
-      res.on('data', (chunk) => {
-        responseData += chunk;
-      });
-
-      res.on('end', () => {
-        if (res.statusCode >= 200 && res.statusCode < 300) {
-          resolve(JSON.parse(responseData));
-        } else {
-          reject(new Error(`Failed to post comment: ${res.statusCode} - ${responseData}`));
-        }
-      });
-    });
-
-    req.on('error', (error) => {
-      reject(error);
-    });
-
-    req.write(data);
-    req.end();
+    body: JSON.stringify({
+      body: String(comment),
+    }),
   });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`Failed to post comment: ${response.status} - ${errorText}`);
+  }
+
+  return response.json();
 }
 
 async function getDiffSummary() {
