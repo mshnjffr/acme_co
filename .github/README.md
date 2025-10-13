@@ -78,7 +78,7 @@ The PR review bot consists of three main components:
                        ▼
 ┌─────────────────────────────────────────────────────────────┐
 │                   Amp Service                            │
-│              (@sourcegraph/the-orb-is-awake)                │
+│              (@sourcegraph/amp-sdk)                │
 │  • Analyzes code changes                                    │
 │  • Reviews for bugs, security, quality                      │
 │  • Returns detailed feedback                                │
@@ -192,7 +192,7 @@ jobs:
         with:
           node-version: '20'  # Use Node 20 (has built-in fetch)
       
-      # 3. Install dependencies (@sourcegraph/the-orb-is-awake)
+      # 3. Install dependencies (@sourcegraph/amp-sdk)
       - name: Install dependencies
         run: |
           cd .github/scripts
@@ -236,7 +236,7 @@ jobs:
     "review": "node pr-review.js"
   },
   "dependencies": {
-    "@sourcegraph/the-orb-is-awake": "^0.1.3"  // Amp SDK
+    "@sourcegraph/amp-sdk": "latest"  // Amp SDK
   },
   "engines": {
     "node": ">=18.0.0"                 // Requires Node 18+ (for fetch API)
@@ -257,7 +257,7 @@ The Amp SDK uses modern JavaScript with `import` statements instead of `require(
 
 ```javascript
 // 1. IMPORT DEPENDENCIES
-import { execute } from '@sourcegraph/the-orb-is-awake';  // Amp SDK
+import { execute } from '@sourcegraph/amp-sdk';  // Amp SDK
 import { execSync } from 'child_process';                // For git commands
 
 // 2. FUNCTION: Post comment to GitHub PR
@@ -379,7 +379,7 @@ your-repository/
 │   │
 │   ├── scripts/
 │   │   ├── package.json           # 📦 Node.js dependencies
-│   │   │                          #    Dependencies: @sourcegraph/the-orb-is-awake
+│   │   │                          #    Dependencies: @sourcegraph/amp-sdk
 │   │   │                          #    Type: ES module (for import/export)
 │   │   │
 │   │   └── pr-review.js           # 🤖 Main review script
@@ -426,7 +426,7 @@ your-repository/
    cd .github/scripts
    npm install
    ↓
-   Installs @sourcegraph/the-orb-is-awake package
+   Installs @sourcegraph/amp-sdk package
    ```
 
 4. **Review Script Executes**
@@ -804,7 +804,7 @@ This PR adds a comprehensive test suite with excellent coverage (97%). Well-stru
 ```json
 {
   "dependencies": {
-    "@sourcegraph/the-orb-is-awake": "^0.1.3"  // Ensure correct package name and version
+    "@sourcegraph/amp-sdk": "latest"  // Ensure correct package name and version
   }
 }
 ```
@@ -818,7 +818,7 @@ This PR adds a comprehensive test suite with excellent coverage (97%). Well-stru
 {
   "type": "module",  // This is required!
   "dependencies": {
-    "@sourcegraph/the-orb-is-awake": "^0.1.3"
+    "@sourcegraph/amp-sdk": "latest"
   }
 }
 ```
@@ -1307,7 +1307,7 @@ The review quality is consistent across languages.
 1. Check for SDK updates:
 ```bash
 cd .github/scripts
-npm update @sourcegraph/the-orb-is-awake
+npm update @sourcegraph/amp-sdk
 ```
 
 2. Update workflow file from this repo if needed
@@ -1331,7 +1331,7 @@ Each can run different prompts and post separate comments.
 
 ### Documentation
 - **Amp Manual**: [ampcode.com/manual](https://ampcode.com/manual)
-- **Amp SDK**: [npmjs.com/package/@sourcegraph/the-orb-is-awake](https://www.npmjs.com/package/@sourcegraph/the-orb-is-awake)
+- **Amp SDK**: [npmjs.com/package/@sourcegraph/amp-sdk](https://www.npmjs.com/package/@sourcegraph/amp-sdk)
 - **GitHub Actions**: [docs.github.com/actions](https://docs.github.com/en/actions)
 - **GitHub REST API**: [docs.github.com/rest](https://docs.github.com/en/rest)
 

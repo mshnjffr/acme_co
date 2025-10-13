@@ -8,7 +8,7 @@
     "review": "node pr-review.js"
   },
   "dependencies": {
-    "@sourcegraph/the-orb-is-awake": "^0.1.3"
+    "@sourcegraph/amp-sdk": "latest"
   },
   "engines": {
     "node": ">=18.0.0"

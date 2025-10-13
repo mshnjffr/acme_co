@@ -1,4 +1,4 @@
-import { execute } from '@sourcegraph/the-orb-is-awake';
+import { execute } from '@sourcegraph/amp-sdk';
 import { execSync } from 'child_process';
 
 async function postComment(prNumber, comment) {
