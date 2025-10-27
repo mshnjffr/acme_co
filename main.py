@@ -1,8 +1,10 @@
 from fastapi import FastAPI, HTTPException, Depends
 from typing import List
 from api.schemas import OrganisationCreate, OrganisationUpdate, OrganisationResponse
-from api.dependencies import get_organisation_service
+from api.employee_schemas import EmployeeResponse
+from api.dependencies import get_organisation_service, get_employee_service
 from services.organisation_service import OrganisationService
+from services.employee_service import EmployeeService
 
 app = FastAPI(title="Organisation API", version="2.0.0")
 
@@ -86,5 +88,12 @@ def delete_organisation(
 ):
     deleted = service.delete_organisation(id)
     if not deleted:
-        raise HTTPException(status_code=404, detail="Organisation not found")
+        raise HTTPException(status_code=204, detail="Organisation not found")
     return {"message": "Organisation deleted successfully"}
+
+@app.get("/employee", response_model=List[EmployeeResponse])
+def get_employees(
+    service: EmployeeService = Depends(get_employee_service)
+):
+    employees = service.get_all_employees()
+    return [employee.to_dict() for employee in employees]
