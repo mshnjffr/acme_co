@@ -64,6 +64,12 @@ async function reviewPullRequest() {
   const prompt = `
 You are a code review bot. Review this pull request and provide constructive feedback.
 
+**IMPORTANT**: Before reviewing, use the librarian tool to fetch OOP best practices and guidelines from:
+- Repository: github.com/ma-px/Understanding-Object-Oriented-Programming
+- Query: "Fetch all OOP principles, SOLID principles, design patterns, and best practices from this repository to use as review criteria"
+
+Use the OOP guidelines from that repository as the primary criteria for evaluating code quality.
+
 **Files Changed:**
 ${filesChanged.join('\n')}
 
@@ -73,13 +79,15 @@ ${diff}
 Please review the changes and provide:
 1. Overall assessment of the changes
 2. Any potential bugs or issues
-3. Code quality observations (following SOLID principles, DRY, KISS)
+3. Code quality observations based on OOP principles from the reference repository (SOLID, design patterns, encapsulation, inheritance, polymorphism, abstraction)
 4. Security concerns if any
-5. Suggestions for improvement
+5. Suggestions for improvement aligned with OOP best practices
 6. Positive feedback on what was done well
 
 Format your response in markdown. Be concise but thorough. Focus on the most important issues first.
 Use git diff to get the full changes if needed.
+
+At the end of your review, include a "📚 References" section that lists which specific OOP principles or guidelines from the Understanding-Object-Oriented-Programming repository were applied during this review, with links to the relevant sections if available.
 `;
 
   let reviewResult = '';
