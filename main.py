@@ -22,6 +22,9 @@ def root():
                 "create": "PUT /organisation",
                 "update": "PUT /organisation/{id}",
                 "delete": "DELETE /organisation/{id}"
+            },
+            "employees": {
+                "list": "GET /employee"
             }
         }
     }
