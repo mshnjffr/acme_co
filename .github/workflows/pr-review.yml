@@ -1,38 +1,77 @@
+# =============================================================================
+# Amp AI PR Review Bot Workflow
+# =============================================================================
+#
+# This workflow triggers an automated AI-powered code review on every pull request.
+#
+# ## How It Works:
+#
+# 1. A PR is opened, updated (synchronize), or reopened
+# 2. This workflow checks out the code with full git history
+# 3. Runs the pr-review.js script which:
+#    - Extracts the git diff between base and head commits
+#    - Calls Amp AI with instructions to use the `librarian` tool
+#    - The librarian fetches OOP guidelines from an external GitHub repo
+#    - Amp reviews the code against those OOP principles
+#    - Posts the review as a comment on the PR
+#
+# ## External Context:
+#
+# The review bot uses OOP principles from:
+# https://github.com/ma-px/Understanding-Object-Oriented-Programming
+#
+# This provides consistent, documented review criteria including:
+# - SOLID principles (Single Responsibility, Open/Closed, etc.)
+# - Design patterns
+# - Encapsulation, inheritance, polymorphism, abstraction
+#
+# ## Required Secrets:
+#
+# - AMP_API_KEY: Your Amp AI API key (get from ampcode.com/settings)
+# - GITHUB_TOKEN: Automatically provided by GitHub Actions
+#
+# =============================================================================
+
 name: PR Review Bot
 
 on:
   pull_request:
+    # Trigger on PR open, update, or reopen
     types: [opened, synchronize, reopened]
 
 permissions:
-  contents: read
-  pull-requests: write
+  contents: read        # Read repo contents for diff analysis
+  pull-requests: write  # Post review comments to the PR
 
 jobs:
   review:
     runs-on: ubuntu-latest
     steps:
+      # Checkout with full history so we can compute accurate diffs
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 0  # Full history needed for git diff between commits
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
+      # Install the Amp SDK and other dependencies
       - name: Install dependencies
         run: |
           cd .github/scripts
           npm install
 
+      # Run the Amp-powered review script
+      # Environment variables provide context about the PR being reviewed
       - name: Run Amp PR Review
         env:
-          AMP_API_KEY: ${{ secrets.AMP_API_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          AMP_API_KEY: ${{ secrets.AMP_API_KEY }}      # Amp AI authentication
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}    # For posting PR comments
           PR_NUMBER: ${{ github.event.pull_request.number }}
-          REPO_NAME: ${{ github.repository }}
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
-          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          REPO_NAME: ${{ github.repository }}          # Format: owner/repo
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}  # Target branch commit
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}  # PR branch commit
         run: node .github/scripts/pr-review.js
