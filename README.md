@@ -632,3 +632,5 @@ For questions or feedback, please contact the development team.
 ---
 
 **Built with ❤️ using FastAPI and Clean Architecture principles**
+
+<!-- こんにちは! You found the Easter egg 🥚 -->
