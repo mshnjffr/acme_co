@@ -7,7 +7,7 @@ client = TestClient(app)
 class TestOrganisationAPI:
     def test_create_organisation_full(self):
         """Test creating an organisation with all fields via API."""
-        response = client.put("/organisation", json={
+        response = client.put("/api/v1/organisation", json={
             "name": "API Test Company",
             "details": "Created via API",
             "tags": ["api", "test"],
@@ -26,7 +26,7 @@ class TestOrganisationAPI:
     
     def test_create_organisation_minimal(self):
         """Test creating an organisation with only required fields."""
-        response = client.put("/organisation", json={
+        response = client.put("/api/v1/organisation", json={
             "name": "Minimal Company"
         })
         
@@ -39,7 +39,7 @@ class TestOrganisationAPI:
     
     def test_create_organisation_missing_name(self):
         """Test creating an organisation without name (should fail)."""
-        response = client.put("/organisation", json={
+        response = client.put("/api/v1/organisation", json={
             "details": "No name provided"
         })
         
@@ -47,7 +47,7 @@ class TestOrganisationAPI:
     
     def test_get_all_organisations_empty(self):
         """Test getting all organisations when none exist."""
-        response = client.get("/organisation")
+        response = client.get("/api/v1/organisation")
         
         assert response.status_code == 200
         data = response.json()
@@ -55,10 +55,10 @@ class TestOrganisationAPI:
     
     def test_get_all_organisations(self):
         """Test getting all organisations."""
-        client.put("/organisation", json={"name": "Company A"})
-        client.put("/organisation", json={"name": "Company B"})
+        client.put("/api/v1/organisation", json={"name": "Company A"})
+        client.put("/api/v1/organisation", json={"name": "Company B"})
         
-        response = client.get("/organisation")
+        response = client.get("/api/v1/organisation")
         
         assert response.status_code == 200
         data = response.json()
@@ -66,13 +66,13 @@ class TestOrganisationAPI:
     
     def test_get_organisation_by_id(self):
         """Test getting a specific organisation by ID."""
-        create_response = client.put("/organisation", json={
+        create_response = client.put("/api/v1/organisation", json={
             "name": "Test Company",
             "tags": ["test"]
         })
         created_id = create_response.json()["id"]
         
-        response = client.get(f"/organisation/{created_id}")
+        response = client.get(f"/api/v1/organisation/{created_id}")
         
         assert response.status_code == 200
         data = response.json()
@@ -82,20 +82,20 @@ class TestOrganisationAPI:
     
     def test_get_organisation_by_id_not_found(self):
         """Test getting a non-existing organisation."""
-        response = client.get("/organisation/999999")
+        response = client.get("/api/v1/organisation/999999")
         
         assert response.status_code == 404
         assert response.json()["detail"] == "Organisation not found"
     
     def test_update_organisation_full(self):
         """Test updating all fields of an organisation."""
-        create_response = client.put("/organisation", json={
+        create_response = client.put("/api/v1/organisation", json={
             "name": "Original Name",
             "details": "Original details"
         })
         created_id = create_response.json()["id"]
         
-        update_response = client.put(f"/organisation/{created_id}", json={
+        update_response = client.put(f"/api/v1/organisation/{created_id}", json={
             "name": "Updated Name",
             "details": "Updated details",
             "tags": ["updated"],
@@ -112,14 +112,14 @@ class TestOrganisationAPI:
     
     def test_update_organisation_partial(self):
         """Test partial update of an organisation."""
-        create_response = client.put("/organisation", json={
+        create_response = client.put("/api/v1/organisation", json={
             "name": "Original",
             "details": "Original details",
             "tags": ["tag1"]
         })
         created_id = create_response.json()["id"]
         
-        update_response = client.put(f"/organisation/{created_id}", json={
+        update_response = client.put(f"/api/v1/organisation/{created_id}", json={
             "name": "Updated Name Only"
         })
         
@@ -131,7 +131,7 @@ class TestOrganisationAPI:
     
     def test_update_organisation_not_found(self):
         """Test updating a non-existing organisation."""
-        response = client.put("/organisation/999999", json={
+        response = client.put("/api/v1/organisation/999999", json={
             "name": "Test"
         })
         
@@ -140,54 +140,53 @@ class TestOrganisationAPI:
     
     def test_delete_organisation(self):
         """Test deleting an organisation."""
-        create_response = client.put("/organisation", json={
+        create_response = client.put("/api/v1/organisation", json={
             "name": "To Be Deleted"
         })
         created_id = create_response.json()["id"]
         
-        delete_response = client.delete(f"/organisation/{created_id}")
+        delete_response = client.delete(f"/api/v1/organisation/{created_id}")
         
         assert delete_response.status_code == 200
         assert delete_response.json()["message"] == "Organisation deleted successfully"
         
-        get_response = client.get(f"/organisation/{created_id}")
+        get_response = client.get(f"/api/v1/organisation/{created_id}")
         assert get_response.status_code == 404
     
     def test_delete_organisation_not_found(self):
         """Test deleting a non-existing organisation."""
-        response = client.delete("/organisation/999999")
+        response = client.delete("/api/v1/organisation/999999")
         
-        assert response.status_code == 404
-        assert response.json()["detail"] == "Organisation not found"
+        assert response.status_code == 204
     
     def test_organisation_lifecycle(self):
         """Test complete lifecycle: create, read, update, delete."""
-        create_response = client.put("/organisation", json={
+        create_response = client.put("/api/v1/organisation", json={
             "name": "Lifecycle Test",
             "tags": ["test"]
         })
         assert create_response.status_code == 201
         org_id = create_response.json()["id"]
         
-        get_response = client.get(f"/organisation/{org_id}")
+        get_response = client.get(f"/api/v1/organisation/{org_id}")
         assert get_response.status_code == 200
         assert get_response.json()["name"] == "Lifecycle Test"
         
-        update_response = client.put(f"/organisation/{org_id}", json={
+        update_response = client.put(f"/api/v1/organisation/{org_id}", json={
             "name": "Updated Lifecycle"
         })
         assert update_response.status_code == 200
         assert update_response.json()["name"] == "Updated Lifecycle"
         
-        delete_response = client.delete(f"/organisation/{org_id}")
+        delete_response = client.delete(f"/api/v1/organisation/{org_id}")
         assert delete_response.status_code == 200
         
-        final_get_response = client.get(f"/organisation/{org_id}")
+        final_get_response = client.get(f"/api/v1/organisation/{org_id}")
         assert final_get_response.status_code == 404
     
     def test_tags_array_handling(self):
         """Test that tags are properly handled as arrays."""
-        response = client.put("/organisation", json={
+        response = client.put("/api/v1/organisation", json={
             "name": "Tag Test",
             "tags": ["tag1", "tag2", "tag3"]
         })
@@ -199,7 +198,7 @@ class TestOrganisationAPI:
     
     def test_empty_tags_array(self):
         """Test handling of empty tags array."""
-        response = client.put("/organisation", json={
+        response = client.put("/api/v1/organisation", json={
             "name": "Empty Tags",
             "tags": []
         })

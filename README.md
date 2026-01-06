@@ -100,7 +100,7 @@ FastAPI's DI system provides loose coupling and easy testing.
 
 ```python
 # Dependencies injected at runtime
-@app.get("/organisation")
+@app.get("/api/v1/organisation")
 def get_organisations(
     service: OrganisationService = Depends(get_organisation_service)
 ):
@@ -225,7 +225,7 @@ http://localhost:8000
 
 #### 1. List All Organisations
 ```http
-GET /organisation
+GET /api/v1/organisation
 ```
 
 **Response:**
@@ -245,12 +245,12 @@ GET /organisation
 
 **cURL Example:**
 ```bash
-curl -X GET "http://localhost:8000/organisation"
+curl -X GET "http://localhost:8000/api/v1/organisation"
 ```
 
 #### 2. Get Organisation by ID
 ```http
-GET /organisation/{id}
+GET /api/v1/organisation/{id}
 ```
 
 **Response:**
@@ -268,7 +268,7 @@ GET /organisation/{id}
 
 **cURL Example:**
 ```bash
-curl -X GET "http://localhost:8000/organisation/1"
+curl -X GET "http://localhost:8000/api/v1/organisation/1"
 ```
 
 **Error Response (404):**
@@ -280,7 +280,7 @@ curl -X GET "http://localhost:8000/organisation/1"
 
 #### 3. Create New Organisation
 ```http
-PUT /organisation
+PUT /api/v1/organisation
 ```
 
 **Request Body:**
@@ -308,7 +308,7 @@ PUT /organisation
 
 **cURL Example:**
 ```bash
-curl -X PUT "http://localhost:8000/organisation" \
+curl -X PUT "http://localhost:8000/api/v1/organisation" \
   -H "Content-Type: application/json" \
   -d '{
     "name": "New Tech Startup",
@@ -320,7 +320,7 @@ curl -X PUT "http://localhost:8000/organisation" \
 
 #### 4. Update Organisation
 ```http
-PUT /organisation/{id}
+PUT /api/v1/organisation/{id}
 ```
 
 **Request Body (partial updates supported):**
@@ -346,7 +346,7 @@ PUT /organisation/{id}
 
 **cURL Example:**
 ```bash
-curl -X PUT "http://localhost:8000/organisation/1" \
+curl -X PUT "http://localhost:8000/api/v1/organisation/1" \
   -H "Content-Type: application/json" \
   -d '{
     "name": "Updated Company Name",
@@ -356,7 +356,7 @@ curl -X PUT "http://localhost:8000/organisation/1" \
 
 #### 5. Delete Organisation
 ```http
-DELETE /organisation/{id}
+DELETE /api/v1/organisation/{id}
 ```
 
 **Response:**
@@ -368,7 +368,7 @@ DELETE /organisation/{id}
 
 **cURL Example:**
 ```bash
-curl -X DELETE "http://localhost:8000/organisation/1"
+curl -X DELETE "http://localhost:8000/api/v1/organisation/1"
 ```
 
 ### Request/Response Models
@@ -557,7 +557,7 @@ python seed_data.py
 1. **Use PostgreSQL or MySQL** for concurrent access
 2. **Add pagination:**
    ```python
-   @app.get("/organisation")
+   @app.get("/api/v1/organisation")
    def get_organisations(skip: int = 0, limit: int = 100):
        ...
    ```
