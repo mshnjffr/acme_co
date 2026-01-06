@@ -99,12 +99,19 @@ class OrganisationService:
 FastAPI's DI system provides loose coupling and easy testing.
 
 ```python
-# Dependencies injected at runtime
-@app.get("/api/v1/organisation")
-def get_organisations(
-    service: OrganisationService = Depends(get_organisation_service)
-):
-    return service.get_all_organisations()
+# Modular router structure with API versioning
+from fastapi import FastAPI
+from api.routers import organisation_router, employee_router, health_router
+
+API_VERSION = "v1"
+API_PREFIX = f"/api/{API_VERSION}"
+
+app = FastAPI(title="Organisation API", version="2.0.0")
+
+# Single point of change for API version - DRY principle
+app.include_router(organisation_router, prefix=API_PREFIX)
+app.include_router(employee_router, prefix=API_PREFIX)
+app.include_router(health_router, prefix=API_PREFIX)
 ```
 
 ## Project Structure
@@ -114,7 +121,12 @@ acme_co/
 ├── api/
 │   ├── __init__.py
 │   ├── schemas.py              # Pydantic models for request/response
-│   └── dependencies.py          # Dependency injection providers
+│   ├── dependencies.py         # Dependency injection providers
+│   └── routers/                # Modular API routers (SRP)
+│       ├── __init__.py
+│       ├── organisation_router.py  # Organisation endpoints
+│       ├── employee_router.py      # Employee endpoints
+│       └── health_router.py        # Health check endpoint
 ├── models/
 │   ├── __init__.py
 │   └── entity.py               # Domain entity (Organisation)
@@ -125,7 +137,7 @@ acme_co/
 ├── services/
 │   ├── __init__.py
 │   └── organisation_service.py # Business logic layer
-├── main.py                     # FastAPI application and routes
+├── main.py                     # FastAPI app with router composition
 ├── seed_data.py               # Database seeding script
 ├── requirements.txt           # Python dependencies
 └── README.md                  # This file
